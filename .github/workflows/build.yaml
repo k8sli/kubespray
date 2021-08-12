@@ -1,0 +1,51 @@
+---
+name: Build kubespray images
+
+on:
+  push:
+    branches: [master, release-*]
+    paths-ignore:
+      - 'docs/**'
+    tag:
+      - 'v*'
+
+env:
+  IMAGE_REGISTRY: "ghcr.io"
+  IMAGE_REPO: "${{ github.repository_owner }}/kubespray"
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+
+      - name: Define image tags by current git repo tag and branch
+        shell: bash
+        run: |
+          git describe --tags --always | sed 's/^/IMAGE_TAG=/' >> $GITHUB_ENV
+          git branch --show-current | sed 's/master/latest/;s/release-//;s/^/IMAGE_TAG_BY_BRANCH=/' >> $GITHUB_ENV
+
+      - name: Build and push images
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: Dockerfile.slim
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG_BY_BRANCH }}
