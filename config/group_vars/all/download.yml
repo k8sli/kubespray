@@ -1,0 +1,82 @@
+---
+# Define all component versions
+kube_version: v1.21.3
+crictl_version: "v1.21.0"
+calico_version: "v3.18.4"
+flannel_version: "v0.14.0"
+pod_infra_version: "3.3"
+nginx_image_version: "1.19"
+dnsautoscaler_version: "1.8.1"
+coredns_version: "1.7.0"
+cni_version: "v0.9.1"
+helm_version: "v3.6.3"
+nerdctl_version: "0.8.1"
+etcd_version: "v3.4.13"
+
+# Default calico addons version
+calico_ctl_version: "{{ calico_version }}"
+calico_cni_version: "{{ calico_version }}"
+calico_flexvol_version: "{{ calico_version }}"
+calico_policy_version: "{{ calico_version }}"
+calico_typha_version: "{{ calico_version }}"
+
+image_arch: "{{ host_architecture | default('amd64')}}"
+download_url: "{{ offline_resources_url }}/files"
+
+# Container registry define
+registry_project: "library"
+gcr_image_repo: "{{ registry_domain }}/{{ registry_project }}"
+kube_image_repo: "{{ registry_domain }}/{{ registry_project }}"
+docker_image_repo: "{{ registry_domain }}/{{ registry_project }}"
+quay_image_repo: "{{ registry_domain }}/{{ registry_project }}"
+
+# Download URLs
+kubelet_download_url: "{{ download_url }}/storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubelet"
+kubectl_download_url: "{{ download_url }}/storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubectl"
+kubeadm_download_url: "{{ download_url }}/storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/kubeadm"
+etcd_download_url: "{{ download_url }}/github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-{{ image_arch }}.tar.gz"
+cni_download_url: "{{ download_url }}/github.com/containernetworking/plugins/releases/download/{{ cni_version }}/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
+calicoctl_download_url: "{{ download_url }}/github.com/projectcalico/calicoctl/releases/download/{{ calico_ctl_version }}/calicoctl-linux-{{ image_arch }}"
+calico_crds_download_url: "{{ download_url }}/github.com/projectcalico/calico/archive/{{ calico_version }}.tar.gz"
+crictl_download_url: "{{ download_url }}/github.com/kubernetes-sigs/cri-tools/releases/download/{{ crictl_version }}/crictl-{{ crictl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
+helm_download_url: "{{ download_url }}/get.helm.sh/helm-{{ helm_version }}-linux-{{ image_arch }}.tar.gz"
+nerdctl_download_url: "{{ download_url }}/github.com/containerd/nerdctl/releases/download/v{{ nerdctl_version }}/nerdctl-{{ nerdctl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
+
+# Define image repo and tag overwrite role/download/default/main.yml
+pod_infra_image_tag: "{{ pod_infra_version }}"
+pod_infra_image_repo: "{{ kube_image_repo }}/pause"
+
+kube_proxy_image_repo: "{{ kube_image_repo }}/kube-proxy"
+kube_apiserver_image_repo: "{{ kube_image_repo }}/kube-apiserver"
+kube_scheduler_image_repo: "{{ kube_image_repo }}/kube-scheduler"
+kube_controller_manager_image_repo: "{{ kube_image_repo }}/kube-controller-manager"
+
+calico_node_image_repo: "{{ docker_image_repo }}/calico-node"
+calico_cni_image_repo: "{{ docker_image_repo }}/calico-cni"
+calico_policy_image_repo: "{{ docker_image_repo }}/calico-kube-controllers"
+calico_policy_image_tag: "{{ calico_policy_version }}"
+
+flannel_image_repo: "{{ quay_image_repo }}/flannel"
+flannel_image_tag: "{{ flannel_version }}-{{ image_arch }}"
+
+nginx_image_repo: "{{ docker_image_repo }}/nginx"
+nginx_image_tag: "{{ nginx_image_version }}"
+
+coredns_image_tag: "{{ coredns_version }}"
+dnsautoscaler_image_tag: "{{ dnsautoscaler_version }}"
+coredns_image_repo: "{{ docker_image_repo }}/coredns"
+dnsautoscaler_image_repo: "{{ kube_image_repo }}/cluster-proportional-autoscaler-{{ image_arch }}"
+
+# Full image name for generate images list
+kube_proxy_image_name: "{{ kube_proxy_image_repo }}:{{ kube_version }}"
+kube_apiserver_image_name: "{{ kube_apiserver_image_repo }}:{{ kube_version }}"
+kube_scheduler_image_name: "{{ kube_scheduler_image_repo }}:{{ kube_version }}"
+kube_controller_manager_image_name: "{{ kube_controller_manager_image_repo }}:{{ kube_version }}"
+coredns_image_name: "{{ coredns_image_repo }}:{{ coredns_image_tag }}"
+dnsautoscaler_image_name: "{{ dnsautoscaler_image_repo }}:{{ dnsautoscaler_image_tag }}"
+nginx_image_name: "{{ nginx_image_repo }}:{{ nginx_image_tag }}"
+pod_infra_image_name: "{{ pod_infra_image_repo }}:{{ pod_infra_image_tag }}"
+calico_policy_image_name: "{{ calico_policy_image_repo }}:{{ calico_policy_image_tag }}"
+calico_cni_image_name: "{{ calico_cni_image_repo }}:{{ calico_cni_image_tag }}"
+calico_node_image_name: "{{ calico_node_image_repo }}:{{ calico_node_image_tag }}"
+flannel_image_name: "{{ flannel_image_repo }}:{{ flannel_image_tag }}"
