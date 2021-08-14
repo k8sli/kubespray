@@ -1,0 +1,114 @@
+---
+name: Download files and images
+
+on:
+  push:
+    branches: [master, release-*]
+    paths-ignore:
+      - 'docs/**'
+    tag:
+      - 'v*'
+  release:
+    branches: [master, release-*]
+
+env:
+  IMAGE_REGISTRY: "ghcr.io"
+  REGISTRY_USER: "${{ github.repository_owner }}"
+  REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  FILES_IMAGE_REPO: "ghcr.io/${{ github.repository_owner }}/kubespray-files"
+  IMAGES_IMAGE_REPO: "ghcr.io/${{ github.repository_owner }}/kubespray-images"
+
+jobs:
+  download:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # fetch all git repo tag for define image tag
+          fetch-depth: 0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.IMAGE_REGISTRY }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_TOKEN }}
+
+      - name: Prepare for build images
+        shell: bash
+        run: |
+          git describe --tags --always | sed 's/^/IMAGE_TAG=/' >> $GITHUB_ENV
+          git branch --show-current | sed 's/^/BRANCH_NAME=/' >> $GITHUB_ENV
+          git branch --show-current | sed 's/master/latest/;s/^/IMAGE_TAG_BY_BRANCH=/' >> $GITHUB_ENV
+
+          source $GITHUB_ENV
+          make list IMAGE_ARCH=amd64 ANSIBLE_ARCHITECTURE=x86_64
+          make list IMAGE_ARCH=arm64 ANSIBLE_ARCHITECTURE=aarch64
+
+          cat build/kubespray-files/* | md5sum | tr -d '\ -' | sed 's/^/FILES_MD5=md5-/' >> $GITHUB_ENV
+          if skopeo inspect docker://${FILES_IMAGE_REPO}:${BRANCH_NAME} > mainfest.json; then
+            jq -r '.Labels.FILES_MD5' mainfest.json | sed 's/^/LATEST_FILES_MD5=/' >> $GITHUB_ENV
+          else
+            echo 'LATEST_FILES_MD5=null' >> $GITHUB_ENV
+          fi
+
+          cat build/kubespray-images/* hack/build/* | md5sum | tr -d '\ -' | sed 's/^/IMAGES_MD5=md5-/' >> $GITHUB_ENV
+          if skopeo inspect docker://${IMAGES_IMAGE_REPO}:${BRANCH_NAME} > mainfest.json; then
+            jq -r '.Labels.IMAGES_MD5' mainfest.json | sed 's/^/LATEST_IMAGES_MD5=/' >> $GITHUB_ENV
+          else
+            echo 'LATEST_IMAGES_MD5=null' >> $GITHUB_ENV
+          fi
+
+      - name: Build and push kubespray-files images
+        uses: docker/build-push-action@v2
+        if: ${{ env.FILES_MD5 != env.LATEST_FILES_MD5 }}
+        with:
+          push: true
+          context: .
+          file: build/kubespray-files/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          labels: FILES_MD5=${{ env.FILES_MD5 }}
+          tags: |
+            ${{ env.FILES_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+            ${{ env.FILES_IMAGE_REPO }}:${{ env.FILES_MD5 }}
+            ${{ env.FILES_IMAGE_REPO }}:${{ env.BRANCH_NAME }}
+
+      - name: Build and push kubespray-images images
+        uses: docker/build-push-action@v2
+        if: false
+        # if: ${{ env.FILES_MD5 == env.LATEST_FILES_MD5 }}
+        with:
+          push: true
+          context: .
+          file: build/kubespray-images/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          labels: FILES_MD5=${{ env.IMAGES_MD5 }}
+          tags: |
+            ${{ env.IMAGES_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGES_IMAGE_REPO }}:${{ env.FILES_MD5 }}
+            ${{ env.IMAGES_IMAGE_REPO }}:${{ env.BRANCH_NAME }}
+
+      - name: Move new cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mkdir -p /tmp/.buildx-cache-new
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
