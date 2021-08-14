@@ -36,3 +36,4 @@ tests
 *.txt
 !requirements.txt
 !tests/requirements.txt
+!build/

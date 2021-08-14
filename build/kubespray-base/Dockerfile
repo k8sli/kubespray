@@ -1,14 +1,12 @@
 FROM python:3 as builder
+ARG KUBE_VERSION=v1.21.3
 COPY requirements.txt requirements.txt
 COPY tests/requirements.txt tests/requirements.txt
-COPY roles/kubespray-defaults/defaults/main.yaml roles/kubespray-defaults/defaults/main.yaml
 RUN echo 'shellcheck-py==0.7.2.1' >> requirements.txt \
     && grep -E '^yamllint|^ansible-lint' tests/requirements.txt >> requirements.txt \
     && pip3 install --user -r requirements.txt
 
-RUN IMAGE_ARCH=$(dpkg --print-architecture) \
-    && KUBE_VERSION=$(sed -n 's/^kube_version: //p' roles/kubespray-defaults/defaults/main.yaml) \
-    && wget -q https://dl.k8s.io/${KUBE_VERSION}/bin/linux/${IMAGE_ARCH}/kubectl -O /root/.local/bin/kubectl \
+RUN wget -q https://dl.k8s.io/${KUBE_VERSION}/bin/linux/$(dpkg --print-architecture)/kubectl -O /root/.local/bin/kubectl \
     && chmod a+x /root/.local/bin/kubectl
 
 FROM python:3-slim
@@ -20,4 +18,3 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -y -qq \
 
 COPY --from=builder /root/.local /usr/local
 WORKDIR /kubespray
-COPY . .

@@ -4,8 +4,8 @@ name: Code Lint
 on:
   push:
     branches: [master, release-*]
-    paths-ignore:
-      - 'docs/**'
+  pull_request:
+    branches: [master, release-*]
 
 env:
   LINT_IMAGE: "ghcr.io/k8sli/kubespray:latest"
