@@ -41,7 +41,7 @@ jobs:
 
           source $GITHUB_ENV
           if skopeo inspect docker://${FILES_IMAGE_REPO}:${BRANCH_NAME} > mainfest.json; then
-            jq -r '.Labels.FILES_MD5' mainfest.json | sed 's/^/FILES_MD5=/' >> $GITHUB_ENV
+            jq -r '.Labels.LATEST_FILES_MD5' mainfest.json | sed 's/^/FILES_MD5=/' >> $GITHUB_ENV
           else
             echo 'LATEST_FILES_MD5=null' >> $GITHUB_ENV
           fi
@@ -73,7 +73,6 @@ jobs:
 
       - name: Build and push kubespray-files images
         uses: docker/build-push-action@v2
-        if: ${{ env.FILES_MD5 != env.LATEST_FILES_MD5 }}
         with:
           push: true
           context: .
