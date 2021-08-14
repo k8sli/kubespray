@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -47,5 +49,5 @@ jobs:
           file: Dockerfile.slim
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG_BY_BRANCH }}
+            ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}
