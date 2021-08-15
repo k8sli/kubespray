@@ -6,8 +6,12 @@ RUN echo 'shellcheck-py==0.7.2.1' >> requirements.txt \
     && grep -E '^yamllint|^ansible-lint' tests/requirements.txt >> requirements.txt \
     && pip3 install --user -r requirements.txt
 
-RUN wget -q https://dl.k8s.io/${KUBE_VERSION}/bin/linux/$(dpkg --print-architecture)/kubectl -O /root/.local/bin/kubectl \
-    && chmod a+x /root/.local/bin/kubectl
+RUN ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/') \
+    && wget -O /root/.local/bin/kubectl \
+            -q https://dl.k8s.io/${KUBE_VERSION}/bin/linux/${ARCH}/kubectl \
+    && wget -O /root/.local/bin/skopeo \
+            -q https://github.com/k8sli/skopeo/releases/download/v1.4.0/skopeo-linux-${ARCH} \
+    && chmod a+x /root/.local/bin/kubectl /root/.local/bin/skopeo
 
 FROM python:3-slim
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -y -qq \
