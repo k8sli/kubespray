@@ -1,0 +1,38 @@
+---
+# kubeadm core images
+- src: k8s.gcr.io/kube-apiserver
+  dest: library/kube-apiserver
+- src: k8s.gcr.io/kube-controller-manager
+  dest: library/kube-controller-manager
+- src: k8s.gcr.io/kube-proxy
+  dest: library/kube-proxy
+- src: k8s.gcr.io/kube-scheduler
+  dest: library/kube-scheduler
+- src: k8s.gcr.io/coredns/coredns
+  dest: library/coredns
+- src: k8s.gcr.io/pause
+  dest: library/pause
+
+# kubernetes addons
+- src: k8s.gcr.io/dns/k8s-dns-node-cache
+  dest: library/k8s-dns-node-cache
+- src: k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64
+  dest: library/cluster-proportional-autoscaler-amd64
+- src: k8s.gcr.io/cpa/cluster-proportional-autoscaler-arm64
+  dest: library/cluster-proportional-autoscaler-arm64
+
+# network plugin
+- src: quay.io/calico/cni
+  dest: library/calico-cni
+- src: quay.io/calico/kube-controllers
+  dest: library/calico-kube-controllers
+- src: quay.io/calico/node
+  dest: library/calico-node
+- src: quay.io/calico/typha
+  dest: library/calico-typha
+- src: quay.io/coreos/flannel
+  dest: library/flannel
+
+# nginx for daemonset and offline
+- src: docker.io/library/nginx
+  dest: library/nginx

@@ -67,7 +67,7 @@ jobs:
             echo 'LATEST_FILES_MD5=null' >> $GITHUB_ENV
           fi
 
-          cat build/kubespray-images/* hack/build/* | md5sum | tr -d '\ -' | sed 's/^/IMAGES_MD5=md5-/' >> $GITHUB_ENV
+          cat build/kubespray-images/*  | md5sum | tr -d '\ -' | sed 's/^/IMAGES_MD5=md5-/' >> $GITHUB_ENV
           if skopeo inspect docker://${IMAGES_IMAGE_REPO}:${BRANCH_NAME} > mainfest.json; then
             jq -r '.Labels.IMAGES_MD5' mainfest.json | sed 's/^/LATEST_IMAGES_MD5=/' >> $GITHUB_ENV
           else
@@ -92,8 +92,7 @@ jobs:
 
       - name: Build and push kubespray-images images
         uses: docker/build-push-action@v2
-        if: false
-        # if: ${{ env.FILES_MD5 == env.LATEST_FILES_MD5 }}
+        if: ${{ env.IMAGES_MD5 != env.LATEST_IMAGES_MD5 }}
         with:
           push: true
           context: .
@@ -101,7 +100,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
-          labels: FILES_MD5=${{ env.IMAGES_MD5 }}
+          labels: IMAGES_MD5=${{ env.IMAGES_MD5 }}
           tags: |
             ${{ env.IMAGES_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGES_IMAGE_REPO }}:${{ env.FILES_MD5 }}

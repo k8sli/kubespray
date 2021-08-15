@@ -2,7 +2,7 @@
 set -eo pipefail
 
 SCRIPT_PATH=$(cd $(dirname $0); pwd)
-REPO_PATH="${SCRIPT_PATH%/hack/build}"
+REPO_PATH="${SCRIPT_PATH%/build}"
 
 : ${IMAGE_ARCH:="amd64"}
 : ${ANSIBLE_ARCHITECTURE:="x86_64"}
