@@ -26,7 +26,7 @@ run:
 # Generate files and images list for build offline install package
 list:
 	@mkdir -p $(IMAGES_LIST_DIR) $(FILES_LIST_DIR)
-	@IMAGE_ARCH=$(IMAGE_ARCH) ANSIBLE_ARCHITECTURE=$(ANSIBLE_ARCHITECTURE) bash hack/build/generate.sh
+	@IMAGE_ARCH=$(IMAGE_ARCH) ANSIBLE_ARCHITECTURE=$(ANSIBLE_ARCHITECTURE) bash build/generate.sh
 	@bash /tmp/generate.sh | sed -n 's#^localhost/##p' | sort -u | tee $(IMAGES_LIST_DIR)/images_$(IMAGE_ARCH).list
 	@bash /tmp/generate.sh | grep 'https://' | sort -u | tee ${FILES_LIST_DIR}/files_$(IMAGE_ARCH).list
 
