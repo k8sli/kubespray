@@ -52,9 +52,9 @@ jobs:
         run: |
           git describe --tags --always | sed 's/^/IMAGE_TAG=/' >> $GITHUB_ENV
           git branch --show-current | sed 's/^/BRANCH_NAME=/' >> $GITHUB_ENV
-          git branch --show-current | sed 's/master/latest/;s/^/IMAGE_TAG_BY_BRANCH=/' >> $GITHUB_ENV
+          git branch --show-current | sed 's/master/latest/;s/main/latest/;s/^/IMAGE_TAG_BY_BRANCH=/' >> $GITHUB_ENV
           sed -n 's/^kube_version: /KUBE_VERSION=/p' roles/kubespray-defaults/defaults/main.yaml >> $GITHUB_ENV
-          cat build/kubespray-base/Dockerfile requirements.txt tests/requirements.txt \
+          cat build/kubespray-base/Dockerfile requirements.txt tests/requirements.txt .github/workflows/* \
           | md5sum | tr -d '\ -' | sed 's/^/BASE_MD5=md5-/' >> $GITHUB_ENV
 
           source $GITHUB_ENV
@@ -80,6 +80,7 @@ jobs:
             ${{ env.BASE_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
             ${{ env.BASE_IMAGE_REPO }}:${{ env.BASE_MD5 }}
             ${{ env.BASE_IMAGE_REPO }}:${{ env.BRANCH_NAME }}
+            ${{ env.BASE_IMAGE_REPO }}:${{ env.IMAGE_TAG_BY_BRANCH }}
 
       - name: Move new cache
         if: ${{ env.BASE_MD5 != env.LATEST_BASE_MD5 }}

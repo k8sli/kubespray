@@ -54,20 +54,20 @@ jobs:
         run: |
           git describe --tags --always | sed 's/^/IMAGE_TAG=/' >> $GITHUB_ENV
           git branch --show-current | sed 's/^/BRANCH_NAME=/' >> $GITHUB_ENV
-          git branch --show-current | sed 's/master/latest/;s/^/IMAGE_TAG_BY_BRANCH=/' >> $GITHUB_ENV
+          git branch --show-current | sed 's/master/latest/;s/main/latest/;s/^/IMAGE_TAG_BY_BRANCH=/' >> $GITHUB_ENV
 
           source $GITHUB_ENV
           make list IMAGE_ARCH=amd64 ANSIBLE_ARCHITECTURE=x86_64
           make list IMAGE_ARCH=arm64 ANSIBLE_ARCHITECTURE=aarch64
 
-          cat build/kubespray-files/* | md5sum | tr -d '\ -' | sed 's/^/FILES_MD5=md5-/' >> $GITHUB_ENV
+          cat build/kubespray-files/* .github/workflows/* | md5sum | tr -d '\ -' | sed 's/^/FILES_MD5=md5-/' >> $GITHUB_ENV
           if skopeo inspect docker://${FILES_IMAGE_REPO}:${BRANCH_NAME} > mainfest.json; then
             jq -r '.Labels.FILES_MD5' mainfest.json | sed 's/^/LATEST_FILES_MD5=/' >> $GITHUB_ENV
           else
             echo 'LATEST_FILES_MD5=null' >> $GITHUB_ENV
           fi
 
-          cat build/kubespray-images/*  | md5sum | tr -d '\ -' | sed 's/^/IMAGES_MD5=md5-/' >> $GITHUB_ENV
+          cat build/kubespray-images/* .github/workflows/* | md5sum | tr -d '\ -' | sed 's/^/IMAGES_MD5=md5-/' >> $GITHUB_ENV
           if skopeo inspect docker://${IMAGES_IMAGE_REPO}:${BRANCH_NAME} > mainfest.json; then
             jq -r '.Labels.IMAGES_MD5' mainfest.json | sed 's/^/LATEST_IMAGES_MD5=/' >> $GITHUB_ENV
           else
@@ -89,6 +89,7 @@ jobs:
             ${{ env.FILES_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
             ${{ env.FILES_IMAGE_REPO }}:${{ env.FILES_MD5 }}
             ${{ env.FILES_IMAGE_REPO }}:${{ env.BRANCH_NAME }}
+            ${{ env.FILES_IMAGE_REPO }}:${{ env.IMAGE_TAG_BY_BRANCH }}
 
       - name: Build and push kubespray-images images
         uses: docker/build-push-action@v2
@@ -105,6 +106,7 @@ jobs:
             ${{ env.IMAGES_IMAGE_REPO }}:${{ env.IMAGE_TAG }}
             ${{ env.IMAGES_IMAGE_REPO }}:${{ env.FILES_MD5 }}
             ${{ env.IMAGES_IMAGE_REPO }}:${{ env.BRANCH_NAME }}
+            ${{ env.IMAGES_IMAGE_REPO }}:${{ env.IMAGE_TAG_BY_BRANCH }}
 
       - name: Move new cache
         run: |
