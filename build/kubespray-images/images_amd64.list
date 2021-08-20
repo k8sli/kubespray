@@ -1,0 +1,12 @@
+library/calico-cni:v3.18.4
+library/calico-kube-controllers:v3.18.4
+library/calico-node:v3.18.4
+library/cluster-proportional-autoscaler-amd64:1.8.3
+library/coredns:v1.8.0
+library/flannel:v0.14.0-amd64
+library/kube-apiserver:v1.21.3
+library/kube-controller-manager:v1.21.3
+library/kube-proxy:v1.21.3
+library/kube-scheduler:v1.21.3
+library/nginx:1.19
+library/pause:3.3
