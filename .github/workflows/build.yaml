@@ -3,7 +3,7 @@ name: Build kubespray images
 
 on:
   push:
-    branches: [master, release-*]
+    branches: [main, master, release-*]
     paths-ignore:
       - 'docs/**'
     tag:
