@@ -1,0 +1,23 @@
+---
+name: Code Lint
+
+on:
+  push:
+    branches: [master, release-*]
+  pull_request:
+    branches: [master, release-*]
+
+env:
+  LINT_IMAGE: "ghcr.io/k8sli/kubespray:latest"
+
+jobs:
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Lint
+        run:
+          docker run --rm -t -v $PWD:/kubespray ${LINT_IMAGE} bash hack/lint.sh || false
