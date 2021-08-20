@@ -82,3 +82,36 @@
 # containerd_ubuntu_repo_base_url: "{{ ubuntu_repo }}/containerd"
 # containerd_ubuntu_repo_gpgkey: "{{ ubuntu_repo }}/containerd/gpg"
 # containerd_ubuntu_repo_repokey: 'YOURREPOKEY'
+
+## CentOS/Redhat
+### For EL7, base and extras repo must be available, for EL8, baseos and appstream
+### By default we enable those repo automatically
+# rhel_enable_repos: false
+### Docker / Containerd
+docker_rh_repo_base_url: "{{ docker_mirrors_url }}/centos/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/stable"
+docker_rh_repo_gpgkey: "{{ docker_mirrors_url }}/centos/gpg"
+
+## Fedora
+### Docker
+docker_fedora_repo_base_url: "{{ docker_mirrors_url }}/fedora/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/stable"
+docker_fedora_repo_gpgkey: "{{ docker_mirrors_url }}/fedora/gpg"
+### Containerd
+containerd_fedora_repo_base_url: "{{ docker_mirrors_url }}/fedora/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/stable"
+containerd_fedora_repo_gpgkey: "{{ docker_mirrors_url }}/fedora/gpg"
+
+## Debian
+### Docker
+docker_debian_repo_base_url: "{{ docker_mirrors_url }}/debian"
+docker_debian_repo_gpgkey: "{{ docker_mirrors_url }}/debian/gpg"
+### Containerd
+containerd_debian_repo_base_url: "{{ docker_mirrors_url }}/debian"
+containerd_debian_repo_gpgkey: "{{ docker_mirrors_url }}/debian/gpg"
+# containerd_debian_repo_repokey: 'YOURREPOKEY'
+
+## Ubuntu
+### Docker
+docker_ubuntu_repo_base_url: "{{ docker_mirrors_url }}/ubuntu"
+docker_ubuntu_repo_gpgkey: "{{ docker_mirrors_url }}/ubuntu/gpg"
+### Containerd
+containerd_ubuntu_repo_base_url: "{{ docker_mirrors_url }}/ubuntu"
+containerd_ubuntu_repo_gpgkey: "{{ docker_mirrors_url }}/ubuntu/gpg"
