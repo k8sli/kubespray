@@ -3,9 +3,9 @@ name: Code Lint
 
 on:
   push:
-    branches: [master, release-*]
+    branches: [main, master, release-*]
   pull_request:
-    branches: [master, release-*]
+    branches: [main, master, release-*]
 
 env:
   LINT_IMAGE: "ghcr.io/k8sli/kubespray:latest"
