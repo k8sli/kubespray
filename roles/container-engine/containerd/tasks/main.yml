@@ -53,7 +53,9 @@
     - not is_ostree
 
 - include_tasks: containerd_repo.yml
-  when: not (is_ostree or (ansible_distribution == "Flatcar Container Linux by Kinvolk"))
+  when:
+    - not (is_ostree or (ansible_distribution == "Flatcar Container Linux by Kinvolk"))
+    - not offline_resources_enabled | bool
 
 - name: Create containerd service systemd directory if it doesn't exist
   file:
