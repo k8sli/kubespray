@@ -1,0 +1,6 @@
+---
+- include_tasks: 01-offline-resources.yml
+  when: offline_resources_enabled | bool
+
+- include_tasks: 02-extra-packages.yml
+  when: extra_packages_enabled | bool
