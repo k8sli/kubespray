@@ -1,7 +1,13 @@
 ---
+yum_repo_dir: /etc/yum.repos.d
+
+apt_repo_dir: /etc/apt/sources.list.d
+
 offline_resources_enabled: true
 
 extra_packages_enabled: false
+
+offline_resources_url: "https://mirrors.kube.k8s.li"
 
 extra_common_required_pkgs:
   - cifs-utils
