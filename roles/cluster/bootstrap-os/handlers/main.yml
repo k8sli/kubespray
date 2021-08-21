@@ -1,0 +1,6 @@
+---
+- name: Chrony | restart chrony service
+  service:
+    name: "{{ chrony_service_name }}"
+    state: restarted
+    enabled: yes

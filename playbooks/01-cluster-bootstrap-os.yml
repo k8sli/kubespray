@@ -22,3 +22,4 @@
     - { role: cluster/kubernetes/preinstall, tags: preinstall }
     - { role: "container-engine", tags: "container-engine", when: deploy_container_engine|default(true) }
     - { role: download, tags: download, when: "not skip_downloads" }
+    - { role: cluster/download, tags: download, when: "not skip_downloads" }
