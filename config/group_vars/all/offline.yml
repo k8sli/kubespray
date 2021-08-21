@@ -9,6 +9,7 @@
 # debian_repo: "http://myinternaldebianrepo"
 ### If using Ubuntu
 # ubuntu_repo: "http://myinternalubunturepo"
+docker_mirrors_url: "https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux"
 
 ## Container Registry overrides
 # kube_image_repo: "{{ registry_host }}"

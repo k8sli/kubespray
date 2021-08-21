@@ -1,6 +1,7 @@
 library/calico-cni:v3.18.4-arm64
 library/calico-kube-controllers:v3.18.4-arm64
 library/calico-node:v3.18.4-arm64
+library/calico-pod2daemon-flexvol:v3.18.4-arm64
 library/cluster-proportional-autoscaler-arm64:1.8.3
 library/coredns:v1.8.0
 library/flannel:v0.14.0-arm64
