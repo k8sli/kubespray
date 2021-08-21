@@ -1,0 +1,30 @@
+---
+- name: Gather facts
+  import_playbook: ../facts.yml
+
+- hosts: k8s_cluster
+  gather_facts: False
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  environment: "{{ proxy_disable_env }}"
+  roles:
+    - { role: kubespray-defaults }
+    - { role: cluster/network, tags: network }
+    - { role: network_plugin, tags: network }
+
+- hosts: kube_control_plane
+  gather_facts: False
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  environment: "{{ proxy_disable_env }}"
+  roles:
+    - { role: kubespray-defaults }
+    - { role: kubernetes-apps/network_plugin, tags: network }
+    - { role: kubernetes-apps/policy_controller, tags: policy-controller }
+
+- hosts: k8s_cluster
+  gather_facts: False
+  tasks:
+    - name: Restart containerd for reload CNI
+      service:
+        name: containerd
+        state: restarted
+        enabled: yes
