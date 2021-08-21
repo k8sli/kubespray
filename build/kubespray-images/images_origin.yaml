@@ -24,14 +24,18 @@
 # network plugin
 - src: quay.io/calico/cni
   dest: library/calico-cni
-- src: quay.io/calico/kube-controllers
-  dest: library/calico-kube-controllers
 - src: quay.io/calico/node
   dest: library/calico-node
+- src: quay.io/calico/kube-controllers
+  dest: library/calico-kube-controllers
+- src: quay.io/calico/pod2daemon-flexvol
+  dest: library/calico-pod2daemon-flexvol
+
 - src: quay.io/calico/typha
   dest: library/calico-typha
 - src: quay.io/coreos/flannel
   dest: library/flannel
+
 
 # nginx for daemonset and offline
 - src: docker.io/library/nginx
