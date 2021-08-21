@@ -1,0 +1,15 @@
+---
+- hosts: bastion[0]
+  gather_facts: False
+  environment: "{{ proxy_disable_env }}"
+  roles:
+    - { role: kubespray-defaults }
+    - { role: bastion-ssh-config, tags: ["localhost", "bastion"] }
+
+- hosts: k8s_cluster:etcd
+  gather_facts: False
+  tasks:
+    - name: Setting up ssh public key authentication
+      authorized_key: "user={{ ansible_user }} key={{ lookup('file', '{{ ansible_ssh_public_key_file }}') }}"
+      when: ansible_ssh_public_key_file is defined
+  tags: ssh-config
