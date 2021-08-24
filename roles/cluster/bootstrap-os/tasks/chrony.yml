@@ -1,0 +1,20 @@
+---
+- name: Chrony | Install Chrony
+  package:
+    name: chrony
+    state: present
+  retries: "{{ pkg_install_retries }}"
+  delay: "{{ retry_stagger | random + 3 }}"
+
+- name: chrony | Copy the chrony.conf template file
+  template:
+    src: chrony.conf.j2
+    dest: "{{ chrony_conf_file_path }}"
+  notify:
+    - Chrony | restart chrony service
+
+- name: Chrony | start and enable chrony service
+  service:
+    name: "{{ chrony_service_name }}"
+    state: restarted
+    enabled: yes
