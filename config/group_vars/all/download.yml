@@ -12,6 +12,7 @@ cni_version: "v0.9.1"
 helm_version: "v3.6.3"
 nerdctl_version: "0.8.1"
 etcd_version: "v3.4.13"
+kubeadm_patch_version: "{{ kube_version }}-patch-1.0"
 
 # Default calico addons version
 calico_ctl_version: "{{ calico_version }}"
@@ -41,6 +42,7 @@ calico_crds_download_url: "{{ download_url }}/github.com/projectcalico/calico/ar
 crictl_download_url: "{{ download_url }}/github.com/kubernetes-sigs/cri-tools/releases/download/{{ crictl_version }}/crictl-{{ crictl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
 helm_download_url: "{{ download_url }}/get.helm.sh/helm-{{ helm_version }}-linux-{{ image_arch }}.tar.gz"
 nerdctl_download_url: "{{ download_url }}/github.com/containerd/nerdctl/releases/download/v{{ nerdctl_version }}/nerdctl-{{ nerdctl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
+patched_kubeadm_download_url: "{{ download_url }}/github.com/k8sli/kubernetes/releases/download/{{ kubeadm_patch_version }}/kubeadm-linux-{{ image_arch }}"
 
 # Define image repo and tag overwrite role/download/default/main.yml
 pod_infra_image_tag: "{{ pod_infra_version }}"
