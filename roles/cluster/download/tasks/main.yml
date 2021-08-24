@@ -1,0 +1,11 @@
+---
+- name: Relpace kubeadm binary file as patch version
+  get_url:
+    url: "{{ patched_kubeadm_download_url }}"
+    dest: "{{ bin_dir }}/kubeadm"
+    mode: 0755
+    owner: root
+    group: root
+  tags:
+    - kubeadm
+  when: kubeadm_patch_enabled | default(true) | bool
