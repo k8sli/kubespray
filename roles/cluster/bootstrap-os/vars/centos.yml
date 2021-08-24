@@ -1,3 +1,8 @@
 ---
 extra_required_pkgs:
   - nfs-utils
+
+chrony_service_name: chronyd
+chrony_conf_file_path: /etc/chrony.conf
+chrony_config_driftfile: /var/lib/chrony/drift
+chrony_config_keyfile: /etc/chrony.keys
