@@ -1,6 +1,28 @@
 ---
-- include_tasks: 01-offline-resources.yml
+- name: gather os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version|lower|replace('/', '_') }}.yml"
+        - "{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}-{{ host_architecture }}.yml"
+        - "{{ ansible_distribution|lower }}-{{ ansible_distribution_release|lower }}.yml"
+        - "{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version|lower|replace('/', '_') }}.yml"
+        - "{{ ansible_distribution|lower }}-{{ host_architecture }}.yml"
+        - "{{ ansible_distribution|lower }}.yml"
+        - "{{ ansible_os_family|lower|replace(' ', '-') }}-{{ host_architecture }}.yml"
+        - "{{ ansible_os_family|lower|replace(' ', '-') }}.yml"
+        - defaults.yml
+      paths:
+        - ../vars
+      skip: true
+  tags:
+    - facts
+
+- include_tasks: bootstrap.yml
   when: offline_resources_enabled | bool
 
-- include_tasks: 02-extra-packages.yml
+- include_tasks: chrony.yml
+  when: chrony_enabled | bool
+
+- include_tasks: extra-packages.yml
   when: extra_packages_enabled | bool

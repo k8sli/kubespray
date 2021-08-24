@@ -1,7 +1,14 @@
 ---
+ntp_server:
+  - ntp.aliyun.com
+
 yum_repo_dir: /etc/yum.repos.d
 
 apt_repo_dir: /etc/apt/sources.list.d
+
+chrony_enabled: true
+
+chrony_config_logdir: /var/log/chrony
 
 offline_resources_enabled: true
 

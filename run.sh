@@ -1,17 +1,19 @@
 #!/bin/bash
 TYPE=$1
-NODES_NAME=$2
+NODES=$2
 
 KUBE_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
-: ${TYPE:="deploy-cluster"}
+: ${TYPE:=deploy-cluster}
 : ${ANSIBLE_FORKS:=10}
-: ${BECOME_USER:="root"}
+: ${BECOME_USER:=root}
+: ${ANSIBLE_LOG_FORMAT:=yaml}
 : ${INVENTORY:=${KUBE_ROOT}/config/inventory}
 : ${ENV_FILE:=${KUBE_ROOT}/config/env.yml}
 : ${INSTALL_STEPS_FILE:=${KUBE_ROOT}/config/.install_steps}
 
-ANSIBLE_ARGS="-f ${ANSIBLE_FORKS} --become --become-user=root -i ${INVENTORY} -e @${ENV_FILE}"
+export ANSIBLE_STDOUT_CALLBACK=${ANSIBLE_LOG_FORMAT}
+export ANSIBLE_ARGS="-f ${ANSIBLE_FORKS} --become --become-user=${BECOME_USER} -i ${INVENTORY} -e @${ENV_FILE}"
 
 #
 # Set logging colors
@@ -30,10 +32,21 @@ errorlog(){ printf "${RED_COL}✖ %s${NORMAL_COL}\n" "$@"; }
 
 set -eo pipefail
 
-if [[ ! -f ${INVENTORY} ]];then
+if [[ ! -f ${INVENTORY} ]]; then
   errorlog "${INVENTORY} file is missing, please check the inventory file is exists"
   exit 1
 fi
+
+check_nodename(){
+  if [[ ${NODES} ]]; then
+    for node in ${NODES/,/ }; do
+      if ! grep ${node} ${INVENTORY}; then
+        warnlog "Not found ${node} in ${INVENTORY} please check $NODES is correct"
+        exit 1
+      fi
+    done
+  fi
+}
 
 deploy_cluster(){
   touch ${INSTALL_STEPS_FILE}
@@ -69,14 +82,14 @@ main(){
       fi
       ;;
     add-node)
-      check_nodename_exist
+      check_nodename
       infolog "######  start add worker to kubernetes cluster  ######"
-      ansible-playbook ${ANSIBLE_ARGS} --limit="$NODES_NAME" ${KUBE_ROOT}/playbooks/10-scale-nodes.yml >/dev/stdout 2>/dev/stderr
+      ansible-playbook ${ANSIBLE_ARGS} --limit="${NODES}" ${KUBE_ROOT}/playbooks/10-scale-nodes.yml >/dev/stdout 2>/dev/stderr
       ;;
     remove-node)
-      check_nodename_exist
+      check_nodename
       infolog "######  start remove worker from kubernetes cluster  ######"
-      ansible-playbook ${ANSIBLE_ARGS} -e node="$NODES_NAME" -e reset_nodes=true ${KUBE_ROOT}/remove-node.yml >/dev/stdout 2>/dev/stderr
+      ansible-playbook ${ANSIBLE_ARGS} -e node="${NODES}" -e reset_nodes=true ${KUBE_ROOT}/remove-node.yml >/dev/stdout 2>/dev/stderr
       ;;
     *)
       errorlog "unknow [TYPE] parameter: ${TYPE}"
