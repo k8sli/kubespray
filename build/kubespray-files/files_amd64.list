@@ -2,10 +2,10 @@ https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz
 https://github.com/containerd/nerdctl/releases/download/v0.8.1/nerdctl-0.8.1-linux-amd64.tar.gz
 https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz
 https://github.com/coreos/etcd/releases/download/v3.4.13/etcd-v3.4.13-linux-amd64.tar.gz
-https://github.com/k8sli/kubernetes/releases/download/v1.21.3-patch-1.0/kubeadm-linux-amd64
+https://github.com/k8sli/kubernetes/releases/download/v1.21.4-patch-1.0/kubeadm-linux-amd64
 https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz
-https://github.com/projectcalico/calico/archive/v3.18.4.tar.gz
-https://github.com/projectcalico/calicoctl/releases/download/v3.18.4/calicoctl-linux-amd64
-https://storage.googleapis.com/kubernetes-release/release/v1.21.3/bin/linux/amd64/kubeadm
-https://storage.googleapis.com/kubernetes-release/release/v1.21.3/bin/linux/amd64/kubectl
-https://storage.googleapis.com/kubernetes-release/release/v1.21.3/bin/linux/amd64/kubelet
+https://github.com/projectcalico/calico/archive/v3.18.5.tar.gz
+https://github.com/projectcalico/calicoctl/releases/download/v3.18.5/calicoctl-linux-amd64
+https://storage.googleapis.com/kubernetes-release/release/v1.21.4/bin/linux/amd64/kubeadm
+https://storage.googleapis.com/kubernetes-release/release/v1.21.4/bin/linux/amd64/kubectl
+https://storage.googleapis.com/kubernetes-release/release/v1.21.4/bin/linux/amd64/kubelet

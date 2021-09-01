@@ -28,4 +28,4 @@
         name: containerd
         state: restarted
         enabled: yes
-    when: container_manager == "containerd"
+      when: container_manager == "containerd"
