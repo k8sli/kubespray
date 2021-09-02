@@ -1,9 +1,13 @@
 ---
+- name: Backup system default package manager repo file
+  shell: find /etc -type f -name '*.repo' -o -name '*.list' | grep -E '/etc/yum.repos.d/|/etc/apt/' | xargs -L1 -I % mv % %.bak
+  ignore_errors: true
+
 ## (1/3) Config offline resources yum and apt repository
 - name: Configure offline resources repository on apt package manager
   template:
     src: "apt_offline_resources.list.j2"
-    dest: "{{ apt_repo_dir }}/offline-resources.list"
+    dest: "{{ apt_repo_dir }}/sources.list.d/offline-resources.list"
     mode: 0644
   when: ansible_pkg_mgr == 'apt'
 
@@ -13,7 +17,6 @@
     dest: "{{ yum_repo_dir }}/offline-resources.repo"
     mode: 0644
   when:
-    - ansible_pkg_mgr == 'yum'
     - ansible_os_family == "RedHat"
 
 - name: Update apt repository cache
