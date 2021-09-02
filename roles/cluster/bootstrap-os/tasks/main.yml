@@ -18,6 +18,12 @@
   tags:
     - facts
 
+- name: Create remote_tmp for it is used by another module
+  file:
+    path: "{{ ansible_remote_tmp | default('~/.ansible/tmp') }}"
+    state: directory
+    mode: 0700
+
 - include_tasks: bootstrap.yml
   when: offline_resources_enabled | bool
 
