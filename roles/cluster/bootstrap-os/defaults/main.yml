@@ -4,7 +4,7 @@ ntp_server:
 
 yum_repo_dir: /etc/yum.repos.d
 
-apt_repo_dir: /etc/apt/sources.list.d
+apt_repo_dir: /etc/apt
 
 chrony_enabled: true
 
