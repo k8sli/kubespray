@@ -40,3 +40,20 @@
 # nginx for daemonset and offline
 - src: docker.io/library/nginx
   dest: library/nginx
+
+- src: quay.io/cilium/certgen
+  dest: library/cilium-certgen
+- src: quay.io/cilium/cilium
+  dest: library/cilium-cilium
+- src: quay.io/cilium/hubble-relay
+  dest: library/cilium-hubble-relay
+- src: quay.io/cilium/hubble-ui-backend
+  dest: library/cilium-hubble-ui-backend
+- src: quay.io/cilium/hubble-ui
+  dest: library/cilium-hubble-ui
+- src: quay.io/cilium/cilium-init
+  dest: library/cilium-init
+- src: quay.io/cilium/operator
+  dest: library/cilium-operator
+- src: docker.io/envoyproxy/envoy
+  dest: library/envoyproxy-envoy
