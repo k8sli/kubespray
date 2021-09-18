@@ -1,7 +1,7 @@
-library/calico-cni:v3.18.5
-library/calico-kube-controllers:v3.18.5
-library/calico-node:v3.18.5
-library/calico-pod2daemon-flexvol:v3.18.5
+library/calico-cni:v3.19.2
+library/calico-kube-controllers:v3.19.2
+library/calico-node:v3.19.2
+library/calico-pod2daemon-flexvol:v3.19.2
 library/cilium-certgen:v0.1.3
 library/cilium-cilium:v1.9.10
 library/cilium-hubble-relay:v1.9.10
@@ -13,9 +13,9 @@ library/cluster-proportional-autoscaler-amd64:1.8.3
 library/coredns:v1.8.0
 library/envoyproxy-envoy:v1.14.5
 library/flannel:v0.14.0-amd64
-library/kube-apiserver:v1.21.4
-library/kube-controller-manager:v1.21.4
-library/kube-proxy:v1.21.4
-library/kube-scheduler:v1.21.4
+library/kube-apiserver:v1.21.5
+library/kube-controller-manager:v1.21.5
+library/kube-proxy:v1.21.5
+library/kube-scheduler:v1.21.5
 library/nginx:1.19
 library/pause:3.3

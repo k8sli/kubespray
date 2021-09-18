@@ -1,8 +1,8 @@
 ---
 # Define all component versions
-kube_version: v1.21.4
+kube_version: v1.21.5
 crictl_version: "v1.21.0"
-calico_version: "v3.18.5"
+calico_version: "v3.19.2"
 flannel_version: "v0.14.0"
 pod_infra_version: "3.3"
 nginx_image_version: "1.19"
