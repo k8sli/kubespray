@@ -1,0 +1,20 @@
+---
+# set etcd_client_cert_serial fact for calico kubespray.etcd-cert/serial
+- name: "Gen_certs | Get etcd certificate serials"
+  command: "openssl x509 -in {{ etcd_cert_dir }}/node-{{ inventory_hostname }}.pem -noout -serial"
+  register: "etcd_client_cert_serial_result"
+  changed_when: false
+  when:
+    - inventory_hostname in groups['k8s_cluster']|union(groups['calico_rr']|default([]))|unique|sort
+    - calico_datastore == "etcd"
+  tags:
+    - network
+
+- name: Set etcd_client_cert_serial
+  set_fact:
+    etcd_client_cert_serial: "{{ etcd_client_cert_serial_result.stdout.split('=')[1] }}"
+  when:
+    - inventory_hostname in groups['k8s_cluster']|union(groups['calico_rr']|default([]))|unique|sort
+    - calico_datastore == "etcd"
+  tags:
+    - network

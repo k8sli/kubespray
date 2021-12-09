@@ -1,0 +1,33 @@
+---
+yum_repo_dir: /etc/yum.repos.d
+
+apt_repo_dir: /etc/apt/sources.list.d
+
+offline_resources_enabled: true
+
+extra_packages_enabled: false
+
+offline_resources_url: "https://mirrors.kube.k8s.li"
+
+extra_common_required_pkgs:
+  - cifs-utils
+  - vim
+  - wget
+  - lvm2
+
+pkg_install_retries: 4
+
+registry_domain_ca_cert_url: "{{ offline_resources_url }}/certs/rootCA.crt"
+
+registry_domain_ca_cert_path: |-
+  {% if ansible_os_family == "Debian" -%}
+  /usr/local/share/ca-certificates/{{ registry_domain }}-ca.crt
+  {%- elif ansible_os_family == "RedHat" -%}
+  /etc/pki/ca-trust/source/anchors/{{ registry_domain }}-ca.crt
+  {%- elif ansible_os_family in ["Flatcar Container Linux by Kinvolk"] -%}
+  /etc/ssl/certs/{{ registry_domain }}-ca.pem
+  {%- elif ansible_os_family == "Suse" -%}
+  /etc/pki/trust/anchors/{{ registry_domain }}-ca.pem
+  {%- elif ansible_os_family == "ClearLinux" -%}
+  /usr/share/ca-certs/{{ registry_domain }}-ca.pem
+  {%- endif %}
