@@ -1,18 +1,21 @@
 ---
 # Define all component versions
-kube_version: v1.21.5
-crictl_version: "v1.21.0"
-calico_version: "v3.19.2"
+kube_version: v1.22.4
+crictl_version: "v1.22.0"
+calico_version: "v3.20.3"
 flannel_version: "v0.14.0"
 pod_infra_version: "3.3"
 nginx_image_version: "1.19"
 dnsautoscaler_version: "1.8.3"
 coredns_version: "v1.8.0"
 cni_version: "v0.9.1"
-helm_version: "v3.6.3"
-nerdctl_version: "0.8.1"
-etcd_version: "v3.4.13"
+helm_version: "v3.7.1"
+nerdctl_version: "0.14.0"
+etcd_version: v3.5.0
 cilium_version: "v1.9.10"
+runc_version: v1.0.3
+containerd_version: 1.5.8
+kubeadm_version: "{{ kube_version }}"
 kubeadm_patch_version: "{{ kube_version }}-patch-1.0"
 
 # Default calico addons version
@@ -44,6 +47,8 @@ crictl_download_url: "{{ download_url }}/github.com/kubernetes-sigs/cri-tools/re
 helm_download_url: "{{ download_url }}/get.helm.sh/helm-{{ helm_version }}-linux-{{ image_arch }}.tar.gz"
 nerdctl_download_url: "{{ download_url }}/github.com/containerd/nerdctl/releases/download/v{{ nerdctl_version }}/nerdctl-{{ nerdctl_version }}-{{ ansible_system | lower }}-{{ image_arch }}.tar.gz"
 patched_kubeadm_download_url: "{{ download_url }}/github.com/k8sli/kubernetes/releases/download/{{ kubeadm_patch_version }}/kubeadm-linux-{{ image_arch }}"
+runc_download_url: "{{ download_url }}/github.com/opencontainers/runc/releases/download/{{ runc_version }}/runc.{{ image_arch }}"
+containerd_download_url: "{{ download_url }}/github.com/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}-linux-{{ image_arch }}.tar.gz"
 
 # Define image repo and tag overwrite role/download/default/main.yml
 pod_infra_image_tag: "{{ pod_infra_version }}"
