@@ -1,0 +1,11 @@
+---
+- name: Hosts | populate registry domain into hosts file
+  blockinfile:
+    path: /etc/hosts
+    block: "{{ registry_ip }} {{ registry_domain }}"
+    state: present
+    create: yes
+    backup: yes
+    unsafe_writes: yes
+    marker: "# Kubespray image registry {mark}"
+  when: registry_domain != "" and registry_ip != ""
