@@ -1,7 +1,6 @@
 FROM python:3 as builder
 ARG KUBE_VERSION=v1.21.3
-COPY requirements.txt requirements.txt
-COPY tests/requirements.txt tests/requirements.txt
+COPY . .
 RUN echo 'shellcheck-py==0.7.2.1' >> requirements.txt \
     && grep -E '^yamllint|^ansible-lint' tests/requirements.txt >> requirements.txt \
     && pip3 install --user -r requirements.txt
