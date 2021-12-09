@@ -34,6 +34,6 @@ test-infra
 tests
 *.tar
 *.txt
-!requirements.txt
-!tests/requirements.txt
+!requirements*.txt
+!tests/requirements*.txt
 !build/
