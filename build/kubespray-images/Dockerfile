@@ -1,5 +1,5 @@
 FROM alpine:3.12 as images
-ARG SKOPEO_VERSION=v1.4.0
+ARG SKOPEO_VERSION=v1.4.1
 ARG YQ_VERSION=v4.11.2
 RUN ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/') \
     && apk --no-cache add bash wget ca-certificates \
