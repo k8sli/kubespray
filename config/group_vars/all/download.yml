@@ -1,18 +1,18 @@
 ---
 # Define all component versions
-kube_version: v1.22.4
+kube_version: v1.22.5
 crictl_version: "v1.22.0"
 calico_version: "v3.20.3"
-flannel_version: "v0.14.0"
+flannel_version: "v0.15.1"
 pod_infra_version: "3.3"
 nginx_image_version: "1.19"
 dnsautoscaler_version: "1.8.3"
 coredns_version: "v1.8.0"
-cni_version: "v0.9.1"
+cni_version: "v1.0.1"
 helm_version: "v3.7.1"
-nerdctl_version: "0.14.0"
+nerdctl_version: "0.15.0"
 etcd_version: v3.5.0
-cilium_version: "v1.9.10"
+cilium_version: "v1.9.11"
 runc_version: v1.0.3
 containerd_version: 1.5.8
 kubeadm_version: "{{ kube_version }}"
